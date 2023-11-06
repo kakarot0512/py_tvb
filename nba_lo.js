@@ -29,7 +29,7 @@ var rule = {
         //"desc":";;;.lab_team_home&&Text;.lab_team_away&&Text",
         //"content":".sub_list ul&&Text",
         "tabs":"js:TABS=['咪咕','腾讯']",
-        "lists":"label.btn&&value",
+        "lists":"https://hlsmgsplive.miguvideo.com/migu/sports/20220127/pcstation39/57/01.m3u8?msisdn=d6a90faa9123d64d29c87f964ab3bd07&mdspid=&spid=800033&netType=4&sid=7510189347&pid=2029000099&timestamp=20231106080258&Channel_ID=0116_25000000-99000-100300010010001&ProgramID=881652858&ParentNodeID=-99&assertID=7510189347&client_ip=36.249.69.216&SecurityKey=20231106080258&promotionId=&mvid=7510094307&mcid=500020&mpid=120000487745&playurlVersion=WX-A1-6.11.1-RELEASE&userid=303687266&jmhm=d6a90faa9123d64d29c87f964ab3bd07&videocodec=h264&mtv_session=e7e9959b0e37b4254db6027bdb790c55&HlsSubType=1&HlsProfileId=1&nphaid=0&encrypt=ae1c324c4359381ae0bb04b4030fd6db",
         //"lists":"js:LISTS=[];pdfh=jsp.pdfh;pdfa=jsp.pdfa;pd=jsp.pd;let html=request(input);let data=pdfa(html,'.sub_playlist&&a');TABS.forEach(function(tab){let d=data.map(function(it){let name=pdfh(it,'strong&&Text');let url=pd(it,'a&&data-play');return name+'$'+url});LISTS.push(d)});",
         },
     搜索:'',
