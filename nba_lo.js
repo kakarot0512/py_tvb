@@ -29,7 +29,7 @@ var rule = {
         //"desc":";;;.lab_team_home&&Text;.lab_team_away&&Text",
         //"content":".sub_list ul&&Text",
         "tabs":"js:TABS=['咪咕','腾讯']",
-        "lists":".btn&&value",
+        "lists":"label.btn&&value",
         //"lists":"js:LISTS=[];pdfh=jsp.pdfh;pdfa=jsp.pdfa;pd=jsp.pd;let html=request(input);let data=pdfa(html,'.sub_playlist&&a');TABS.forEach(function(tab){let d=data.map(function(it){let name=pdfh(it,'strong&&Text');let url=pd(it,'a&&data-play');return name+'$'+url});LISTS.push(d)});",
         },
     搜索:'',
