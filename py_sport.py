@@ -48,8 +48,9 @@ class Spider(Spider):  # 元类 默认的元类 type
 		dataList = root.xpath("//div[@class='fixtures']/div[@class='box']")
 		dateList = root.xpath("//div[contains(@class,'subhead')]")
 		videos = []
-		utc_offset = self.fetch('http://worldtimeapi.org/api/timezone/Australia/Sydney', headers=self.header).json()['utc_offset']
-		hour_offset = int(utc_offset.split(':')[0][1:]) - 8
+		#utc_offset = self.fetch('http://worldtimeapi.org/api/timezone/Australia/Sydney', headers=self.header).json()['utc_offset']
+		#hour_offset = int(utc_offset.split(':')[0][1:]) - 8
+		hour_offset = 3
 		for data in dataList:
 			pos = dataList.index(data)
 			for video in data.xpath(".//div[@class='list']/ul/li"):
