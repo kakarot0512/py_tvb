@@ -74,7 +74,8 @@ class Spider(Spider):  # 元类 默认的元类 type
 					cover = infosList[0].xpath('.//img/@src')[0]
 					name = home + 'VS' + away
 				else:
-					cover = 'https://s1.ax1x.com/2022/10/07/x3NPUO.png'
+					#cover = 'https://s1.ax1x.com/2022/10/07/x3NPUO.png'
+					cover = ''
 					name = infosList[1].xpath('.//text()')[0].strip()
 				if state != '已结束':
 					videos.append({
@@ -149,7 +150,8 @@ class Spider(Spider):  # 元类 默认的元类 type
 		vod = {
 			"vod_id":array[0],
 			"vod_name":title,
-			"vod_pic":'https://s1.ax1x.com/2022/10/07/x3NPUO.png',
+			#"vod_pic":'https://s1.ax1x.com/2022/10/07/x3NPUO.png',
+			"vod_pic":'',
 			"type_name":'',
 			"vod_year":'',
 			"vod_area":"",
