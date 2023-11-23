@@ -13,7 +13,8 @@ class Spider(Spider):
 	def getName(self):
 		return "btl"
 	def init(self,extend=""):
-		pass
+		self.session = requests.Session()
+        	self.default_headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3'}
 	def isVideoFormat(self,url):
 		pass
 	def manualVideoCheck(self):
@@ -27,11 +28,28 @@ class Spider(Spider):
 	def categoryContent(self,tid,pg,filter,extend):
 		result = {}
 		return result
+
+        def btl_get(self, url):
+         # 发送第一次请求，获取HTML代码
+         response1 = self.session.get(url, headers=self.default_headers)
+
+         # 从HTML代码中提取cookie值
+         cookie_pattern = re.compile(r'document\.cookie\s*=\s*"ge_js_validator_88=([^;]+)')
+         match = cookie_pattern.search(response1.text)
+         if match:
+            cookie_value = match.group(1)
+            # 模拟浏览器 reload()，发送第二次请求
+            response2 = self.session.get(url, cookies={"ge_js_validator_88": cookie_value}, headers=self.default_headers)
+
+            # 返回第二次请求的响应内容
+            return response2.text
+         else:
+            return "Cookie未找到"	
+  
 	def detailContent(self,ids):
 		aid = ids[0]			
 		url = 'https://www.5bt0.com/mv/{0}.html'.format(aid)
-		response = requests.post(url, headers={'User-Agent': 'Mozilla/5.0 Chrome/100.0.4896.127'})
-		html = response.text
+		html = self.btl_get(url)
 		
 		title = re.search(r'info-title lh32">(.*?)</span>', html,re.S).group(1)
 		area = re.search(r'上映地区:(.*?)</span>', html,re.S).group(1).strip()
@@ -85,9 +103,8 @@ class Spider(Spider):
 	def searchContent(self,key,quick):
 		    
 	    url = 'https://www.5bt0.com/search.php?sb={0}'.format(key)
-	    response = requests.post(url, headers={'User-Agent': 'Mozilla/5.0 Chrome/100.0.4896.127'})
-	    html = response.text
-	    
+	    html = self.btl_get(url)
+	    	    
 	    pattern = re.compile(r'<a href="./mv/(.*?).html.*?image:url\((.*?)\).*?<h5>(.*?)<span class="type--fine-print">\((.*?)\)</span></h5>', re.S)
 	    sealists = re.findall(pattern, html)
 	    
