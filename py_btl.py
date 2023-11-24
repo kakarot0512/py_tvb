@@ -21,9 +21,26 @@ class Spider(Spider):
 	def homeContent(self,filter):
 		result = {}
 		return result
-	def homeVideoContent(self):
-		result = {}
-		return result
+	def homeContent(self,filter):
+	    url = 'https://www.5bt0.com/?sc=5'
+	    html = self.btl_get(url)
+	    	    
+	    pattern = re.compile(r'mv/(.*?).html.*?image:url\((.*?)\).*?<h2>(.*?)<br><span>(.*?)</span></h2>', re.S)
+	    sealists = re.findall(pattern, html)
+	    
+	    videos = []
+	    for link, img, title, remark in sealists:
+	        videos.append({
+	            "vod_id": link,
+	            "vod_name": title,
+	            "vod_pic": img,
+	            "vod_remarks": remark
+	        })
+	   	   	    
+	    result = {
+	        'list': videos
+	    }
+	    return result
 	def categoryContent(self,tid,pg,filter,extend):
 		result = {}
 		return result
