@@ -21,7 +21,7 @@ class Spider(Spider):
 	def homeContent(self,filter):
 		result = {}
 		return result
-	def homeContent(self,filter):
+	def homeVideoContent(self):
 	    url = 'https://www.5bt0.com/?sc=5'
 	    html = self.btl_get(url)
 	    	    
