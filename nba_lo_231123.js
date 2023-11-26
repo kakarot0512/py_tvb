@@ -14,7 +14,7 @@ var rule = {
     timeout:5000,
     play_parse:true,
     lazy:"",
-    limit:4,
+    limit:6,
     double:false,
 
      //是否启用辅助嗅探: 1,0
