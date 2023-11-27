@@ -1,6 +1,6 @@
 var rule = {
     title:'NBA_LiftOff',
-    host:'https://www.chat-aigpt.vip',
+    host:'https://nbahd.live',
     url:'/fyclass',
     searchUrl:'',
     searchable:0,
