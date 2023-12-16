@@ -8,6 +8,7 @@ import base64
 import random
 import requests
 import urllib.parse
+import re
 
 class Spider(Spider):  # 元类 默认的元类 type
 	def getName(self):
@@ -92,61 +93,37 @@ class Spider(Spider):  # 元类 默认的元类 type
 		return result
 
 	def detailContent(self, array):
-		for i in range(1, 5):
-			rsp = self.fetch('http://itiyu5.tv{}/vid/{}'.format(array[0], i), headers=self.header)
-			if 'vid/{}'.format(i) not in rsp.text or not '\'url\': ' in rsp.text:
-				title = '比赛尚未开始'
-				purl = 'http://0.0.0.0'
-			else:
-				purl = self.regStr(reg=r"\'url\': \"(.*?)\"", src=rsp.text)
-				title = self.regStr(reg=r"\"title\": \"(.*?)\"", src=rsp.text)
-				if purl == '':
-					rid = self.regStr(reg=r'config\.iurl = \"(.*?)\"', src=rsp.text)
-					if '.m3u' in rid:
-						if rid.count('http') != 1:
-							replstr = self.regStr(reg=r'(http.*?)http', src=rid)
-							purl = rid.replace(replstr, '')
+		#array = ['/spweb/live/mid/62821']
+		html_content = self.fetch('http://itiyu5.tv{}'.format(array[0]), headers=self.header)
+		#print(html_content.text)
+		matches = re.findall("/spweb/live/mid/", html_content.text)
+		if len(matches) >0:
+			playurl = ''
+			for i in range(1, len(matches)+1):
+				rsp = self.fetch('http://itiyu5.tv{}/vid/{}'.format(array[0], i), headers=self.header)
+				if 'vid/{}'.format(i) not in rsp.text or not '\'url\': ' in rsp.text:
+					title = '比赛尚未开始'
+					purl = 'http://0.0.0.0'
+				else:
+					purl = self.regStr(reg=r"\'url\': \"(.*?)\"", src=rsp.text)
+					title = self.regStr(reg=r"\"title\": \"(.*?)\"", src=rsp.text)
+					if purl == '':
+						rid = self.regStr(reg=r'config\.iurl = \"(.*?)\"', src=rsp.text)
+						if '.m3u' in rid:
+							if rid.count('http') != 1:
+								replstr = self.regStr(reg=r'(http.*?)http', src=rid)
+								purl = rid.replace(replstr, '')
+					if i == 1:									
+						playurl = '直播1$' + purl
 					else:
-						rid = self.regStr(reg=r'id=(.*)', src=rid)
-						rsp = self.fetch('https://info.zb.video.qq.com/?cmd=4', headers=self.header)
-						country = json.loads(rsp.text)['country']
-						province = json.loads(rsp.text)['province']
-						city = json.loads(rsp.text)['city']
-						ip = json.loads(rsp.text)['ip']
-						rsp = self.fetch('https://geo.yolll.com/geo', headers=self.header)
-						cf_ua = json.loads(rsp.text)['ua']
-						cf_cc = json.loads(rsp.text)['ip']
-						cf_ip = json.loads(rsp.text)['cc']
-						rnd = round(random.random() * 100000)
-						param = {
-							'type': 'stream',
-							'id': rid,
-							'rnd': rnd,
-							'ip': ip,
-							'country': country,
-							'province': province,
-							'city': city,
-							'tx_ip': ip,
-							'tx_country': country,
-							'tx_province': province,
-							'tx_city': city,
-							'cf_ip': cf_ip,
-							'cf_cc': cf_cc,
-							'cf_ua': cf_ua,
-							'ref': 'direct',
-							'ua': 'web',
-						}
-						self.header['Referer'] = 'https://v.stnye.cc/'
-						self.header['Content-Type'] = 'application/x-www-form-urlencoded; charset=UTF-8'
-						rsp = self.post('https://cdn.dianshunxinxi.com/data/live.php', data=param, headers=self.header)
-						jo = json.loads(rsp.text)
-						if jo['status'] != 'success':
-							return ''
-						else:
-							purl = base64.b64decode(urllib.parse.unquote(jo['playurl'])).decode('utf-8')
-							purl = base64.b64decode(purl).decode('utf-8')
-			if '.m3u' in purl or purl == 'http://0.0.0.0':
-				break
+						playurl = playurl + '#直播{}$'.format(i) + purl
+			playfrom = title							
+		else:
+			title = '比赛尚未开始'
+			playurl = 'http://0.0.0.0'
+
+			#if '.m3u' in purl or purl == 'http://0.0.0.0':
+				#break
 		vod = {
 			"vod_id":array[0],
 			"vod_name":title,
@@ -160,23 +137,16 @@ class Spider(Spider):  # 元类 默认的元类 type
 			"vod_director":'',
 			"vod_content":""
 		}
-		findurl = False
-		if purl != '' and purl != 'http://0.0.0.0':
-			rsp = self.fetch(purl, headers=self.header)
-			if '.m3u8' in rsp.text and title != '比赛尚未开始':
-				findurl = True
-			while findurl:
-				purl = rsp.text.strip('\n').split('\n')[-1]
-				rsp = requests.get(purl, headers=self.header, verify=False)
-				if '.m3u8' not in rsp.text:
-					findurl = False
-		vod['vod_play_from'] = '体育直播'
-		vod['vod_play_url'] = '{}${}'.format(title.replace(' ', ''), purl)
+		
+		vod['vod_play_from'] = playfrom
+		vod['vod_play_url'] = playurl
 		result = {
 			'list':[
 				vod
 			]
 		}
+		
+		print(vod)
 		return result
 
 	def searchContent(self,key,quick):
