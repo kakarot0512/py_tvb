@@ -93,7 +93,7 @@ class Spider(Spider):  # 元类 默认的元类 type
 		return result
 
 	def detailContent(self, array):
-		array = ['/spweb/live/mid/62821']
+		#array = ['/spweb/live/mid/62821']
 		html_content = self.fetch('http://itiyu5.tv{}'.format(array[0]), headers=self.header)
 		#print(html_content.text)
 		matches = re.findall("/spweb/live/mid/", html_content.text)
