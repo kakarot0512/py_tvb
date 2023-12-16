@@ -119,7 +119,7 @@ class Spider(Spider):  # 元类 默认的元类 type
 						playurl = playurl + '#直播{}$'.format(i) + purl
 			playfrom = title							
 		else:
-			#title = '比赛尚未开始'
+			title = '比赛尚未开始'
 			playfrom = '比赛尚未开始'
 			playurl = 'http://0.0.0.0'
 
